@@ -69,3 +69,76 @@ body {
 .corner { width: clamp(2.25rem, 4vw, 3.5rem); height: auto; }
 .frame-pad { padding: clamp(3.25rem, 8vh, 6rem) clamp(2.25rem, 7vw, 6rem); }
 .portrait { width: clamp(11rem, 24vw, 18rem); aspect-ratio: 4 / 5; }
+
+/* Blooming flower */
+.petal { transform-box: view-box; transform-origin: 100px 100px; transition: transform 1.3s cubic-bezier(.22,.8,.24,1); }
+.bud-core { transition: opacity .8s ease; }
+.is-open .bud-core { opacity: 0; }
+.flower-svg { transition: transform .35s ease; }
+.bloom-wrap:has(.bloom-btn:active) .flower-svg { transform: scale(.97); }
+.bloom-wrap:not(.is-open) .breathe { animation: breathe 5s ease-in-out infinite; }
+@keyframes breathe { 0%,100% { transform: scale(1) } 50% { transform: scale(1.025) } }
+.glow { opacity: 0; transform: scale(.7); background: radial-gradient(circle, rgba(226,194,106,.75), rgba(226,194,106,0) 68%); transition: opacity 1.2s ease, transform 1.4s ease; }
+.is-open .glow { opacity: 1; transform: scale(1.12); }
+.bloom-photo { opacity: 0; transform: scale(.6); transition: opacity .6s ease, transform .6s ease; }
+.is-open .bloom-photo { opacity: 1; transform: scale(1); transition: opacity 1s ease .7s, transform 1.2s cubic-bezier(.22,.8,.24,1) .6s; }
+.bloom-names, .hint { transition: opacity 1s ease; }
+.bloom-names { opacity: 0; }
+.bloom-names.is-on { opacity: 1; transition-delay: 1.2s; }
+.hint.is-off { opacity: 0; }
+.drift { position: absolute; left: 50%; top: 50%; width: 14px; height: auto; opacity: 0; pointer-events: none; animation: drift 5s ease-out infinite; }
+@keyframes drift { 0% { opacity: 0; transform: translate(0,0) rotate(0) } 20% { opacity: .9 } 100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(160deg) } }
+@media (prefers-reduced-motion: reduce) {
+  .petal, .glow, .bloom-photo, .bloom-names, .hint, .flower-svg { transition-duration: .01s !important; transition-delay: 0s !important; }
+  .drift, .breathe { animation: none !important; display: none; }
+}
+
+/* Untie-the-rope opening */
+.untie { transition: opacity 1.2s ease .2s; }
+.untie[data-reveal] { opacity: 0; pointer-events: none; }
+.stage { transition: transform 1.4s cubic-bezier(.4,.1,.2,1); }
+.untie[data-reveal] .stage { transform: scale(1.8); }
+.rp, .k-knot, .flap, .card, .ring { transform-box: fill-box; transform-origin: center; }
+.rp path { stroke-dasharray: 1 1; stroke-dashoffset: 0; transition: stroke-dashoffset 1.4s ease-in; }
+.rp { transition: transform 1.3s ease-in-out; }
+.k-knot { transition: transform .9s ease-in-out, opacity .9s ease; }
+.stage:has(.knot-btn:hover) .k-knot { transform: scale(1.1); }
+.stage:has(.knot-btn:active) .k-knot { transform: scale(.92) rotate(-8deg); }
+.ring { animation: ringpulse 2.4s ease-in-out infinite; }
+@keyframes ringpulse { 0%,100% { opacity: .15; transform: scale(.9) } 50% { opacity: .8; transform: scale(1.15) } }
+.untie:not([data-loose]) .rp-h, .untie:not([data-loose]) .rp-v { animation: tug 3.6s ease-in-out infinite; }
+@keyframes tug { 0%,100% { transform: none } 50% { transform: translateY(1.5px) } }
+.hint-pulse { animation: hintp 2.6s ease-in-out infinite; }
+@keyframes hintp { 0%,100% { opacity: .65 } 50% { opacity: 1 } }
+
+/* 1. loosen: knot twists, loops swell, ropes sag */
+.untie[data-loose] .ring { animation: none; opacity: 0; }
+.untie[data-loose] .k-knot { transform: rotate(-35deg) scale(.88); }
+.untie[data-loose] .bow-a { transform: scale(1.3) rotate(-14deg); }
+.untie[data-loose] .bow-b { transform: scale(1.3) rotate(14deg); }
+.untie[data-loose] .rp-h { transform: translateY(7px) scaleY(1.3); }
+.untie[data-loose] .rp-v { transform: translateX(6px) scaleX(1.3); }
+.untie[data-loose] .rp-t { transform: rotate(8deg); }
+/* 2. slide away: each segment is drawn out and pulled off-screen */
+.untie[data-slide] .rp path { stroke-dashoffset: 1; }
+.untie[data-slide] .rp-l { transform: translateX(-70px); }
+.untie[data-slide] .rp-r { transform: translateX(70px); }
+.untie[data-slide] .rp-u { transform: translateY(-70px); }
+.untie[data-slide] .rp-d { transform: translateY(70px); }
+.untie[data-slide] .bow-a { transform: scale(.4) translate(-40px, -30px) rotate(-40deg); }
+.untie[data-slide] .bow-b { transform: scale(.4) translate(40px, -30px) rotate(40deg); }
+.untie[data-slide] .rp-t { transform: translateY(80px); }
+.untie[data-slide] .k-knot { transform: rotate(120deg) scale(.5) translateY(50px); opacity: 0; }
+/* 3. envelope opens, card rises */
+.flap { transform-box: view-box; transform-origin: 200px 120px; transition: transform 1.1s ease-in-out; }
+.untie[data-open] .flap { transform: scaleY(-1); }
+.card { transition: transform 1.1s cubic-bezier(.3,.8,.3,1) .7s; }
+.untie[data-open] .card { transform: translateY(-120px); }
+/* sparks & petals during reveal */
+.spark { position: absolute; bottom: 28%; width: 6px; height: 6px; border-radius: 50%; background: #f3dc95; box-shadow: 0 0 8px #e2c26a; opacity: 0; animation: rise 2.4s ease-out forwards; pointer-events: none; }
+.spark-petal { width: 9px; height: 14px; border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%; background: #f6a9bd; box-shadow: none; }
+@keyframes rise { 0% { opacity: 0; transform: translate(0,0) } 20% { opacity: 1 } 100% { opacity: 0; transform: translate(var(--dx), -260px) rotate(200deg) } }
+@media (prefers-reduced-motion: reduce) {
+  .untie, .stage, .rp, .rp path, .k-knot, .flap, .card { transition-duration: .01s !important; transition-delay: 0s !important; }
+  .ring, .hint-pulse, .rp-h, .rp-v, .spark { animation: none !important; }
+}

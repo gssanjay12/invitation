@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { weddingData as d } from '../data/weddingData'
 
 export function Reveal({ children, className = '', delay = 0 }) {
   const ref = useRef(null)
@@ -6,7 +7,7 @@ export function Reveal({ children, className = '', delay = 0 }) {
     const el = ref.current
     if (!el || !('IntersectionObserver' in window)) { el?.classList.add('in'); return }
     const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { el.classList.add('in'); io.disconnect() }
+      el.classList.toggle('in', e.isIntersecting)
     }, { threshold: 0.15 })
     io.observe(el)
     return () => io.disconnect()
@@ -168,4 +169,18 @@ export function Frame({ children, className = '' }) {
       <div className="relative frame-pad">{children}</div>
     </div>
   )
+}
+
+/* Photo from /public/images with extension fallback and an ornamental placeholder (never a broken icon) */
+export function Photo({ name, alt, className = 'w-full h-full' }) {
+  const im = d.images, file = im[name]
+  const list = !file ? [] : file.includes('.') ? [file] : im.extensions.map((e) => `${file}.${e}`)
+  const [i, setI] = useState(0)
+  if (i >= list.length)
+    return (
+      <div className={`${className} flex flex-col items-center justify-center`}>
+        <Lotus size={56} /><span className="font-sans-ta t-label text-gold mt-2">{d.bloom.photoPlaceholder}</span>
+      </div>
+    )
+  return <img src={im.dir + list[i]} alt={alt} loading="lazy" onError={() => setI(i + 1)} className={`${className} object-cover`} style={{ objectPosition: im.position?.[name] || 'center' }} />
 }
