@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+  --color-maroon: #5a0f14;
+  --color-red: #9b1c1f;
+  --color-gold: #b88a2e;
+  --color-gold-light: #e2c26a;
+  --color-ivory: #fbf3e2;
+  --color-sandal: #ecd9b4;
+  --font-serif-ta: "Noto Serif Tamil", serif;
+  --font-sans-ta: "Noto Sans Tamil", sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+html, body { margin: 0; overflow-x: hidden; }
+body {
+  font-family: var(--font-sans-ta);
+  color: var(--color-maroon);
+  background: var(--color-ivory);
+}
+#root { width: 100%; min-height: 100svh; }
+.safe {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.card-paper {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255,255,255,.55), transparent 60%),
+    var(--color-ivory);
+}
+.gold-text {
+  background: linear-gradient(180deg, #e7c76f, #a87a22 60%, #c9a042);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.tamil-lines { line-height: 2.1; }
+
+/* reveal on scroll */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity 1s ease, transform 1s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+@keyframes sway { 0%,100% { transform: rotate(-1.2deg) } 50% { transform: rotate(1.2deg) } }
+.sway { transform-box: fill-box; transform-origin: 50% 0; animation: sway 6s ease-in-out infinite; }
+@keyframes flame { 0%,100% { transform: scale(1) } 50% { transform: scale(1.12, 1.2) } }
+.flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flame 2.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .sway, .flame { animation: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* Fluid type scale */
+.t-title { font-size: clamp(2.1rem, 1.3rem + 3.2vw, 4.25rem); }
+.t-name  { font-size: clamp(1.9rem, 1.1rem + 3.6vw, 4.75rem); }
+.t-h2    { font-size: clamp(1.75rem, 1.2rem + 1.8vw, 3rem); }
+.t-strong{ font-size: clamp(1.15rem, 1rem + .75vw, 1.7rem); }
+.t-body  { font-size: clamp(1rem, .9rem + .45vw, 1.3rem); }
+.t-label { font-size: clamp(.82rem, .75rem + .25vw, 1.05rem); }
+.t-close { font-size: clamp(1.6rem, 1.1rem + 2vw, 3.1rem); }
+
+/* Fluid ornament sizing */
+.divider { width: clamp(10rem, 22vw, 20rem); }
+.divider.divider-sm { width: clamp(5rem, 9vw, 9rem); }
+.garland { width: clamp(3rem, 8vw, 9rem); height: auto; }
+.lamp { width: clamp(2.25rem, 4vw, 4.5rem); height: auto; flex-shrink: 0; }
+.lamp-xl { width: clamp(4rem, 7vw, 8.5rem); height: auto; }
+.corner { width: clamp(2.25rem, 4vw, 3.5rem); height: auto; }
+.frame-pad { padding: clamp(3.25rem, 8vh, 6rem) clamp(2.25rem, 7vw, 6rem); }
+.portrait { width: clamp(11rem, 24vw, 18rem); aspect-ratio: 4 / 5; }
